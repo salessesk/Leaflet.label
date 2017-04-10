@@ -153,7 +153,6 @@ var LeafletLabel = L.Class.extend({
 	_setPosition: function (pos) {
 		var map = this._map,
 			container = this._container,
-			centerPoint = map.latLngToContainerPoint(map.getCenter()),
 			labelPoint = map.layerPointToContainerPoint(pos),
 			direction = this.options.direction,
 			labelWidth = this._labelWidth,
@@ -165,19 +164,23 @@ var LeafletLabel = L.Class.extend({
 			var size = this._source.getLayerSize();
 			var vOffset = L.point(0, 0);
 			var hOffset = L.point(0, 0);
+			var className = ['center', 'top'];
 
 			// label is getting out of the map by the top
 			if (labelPoint.y - labelHeight - size[1] / 2 < 0) {
 				vOffset = L.point(0, size[1] / 2 + offset.y);
+				className[1] = 'bottom';
 			}
 			else {
 				vOffset = L.point(0, - size[1] / 2 - labelHeight - offset.y);
 			}
 
 			if (labelPoint.x + offset.x  + (labelWidth / 2) > mapSize.x) {
-				hOffset = L.point(- labelWidth - (size[0] / 2), 0);
+				className[0] = 'left';
+				hOffset = L.point(- labelWidth, 0);
 			} else if (labelPoint.x - (labelWidth / 2) + offset.x < 0) {
-				hOffset = L.point((size[0] / 2), 0);
+				className[0] = 'right';
+				hOffset = L.point(0, 0);
 			} else {
 				//Position label in center
 				hOffset = L.point(-labelWidth / 2, 0);
@@ -185,6 +188,7 @@ var LeafletLabel = L.Class.extend({
 
 			pos = pos.add(vOffset);
 			pos = pos.add(hOffset);
+			L.DomUtil.addClass(container, 'leaflet-label-' + className.join('-'));
 		}
 		// position to the right (right or auto & needs to)
 		else if (direction === 'right') {
