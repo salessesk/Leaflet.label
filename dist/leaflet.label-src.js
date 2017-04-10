@@ -18,7 +18,7 @@
 	}
 
 	// attach your plugin to the global 'L' variable
-	if (typeof window !== 'undefined' && window.L) {
+	else if (typeof window !== 'undefined' && window.L) {
 		window.LeafletLabel = factory(L);
 	}
 }(function (L) {
