@@ -42,6 +42,14 @@ L.Path.include({
 		}
 	},
 
+	getLayerSize: function () {
+		var bounds = this.getBounds();
+		var nwPoint = this._map.latLngToLayerPoint(bounds.getNorthWest());
+		var sePoint = this._map.latLngToLayerPoint(bounds.getSouthEast());
+
+		return new L.Point(Math.abs(sePoint.x - nwPoint.x), Math.abs(nwPoint.y - sePoint.y), false);
+	},
+
 	_showLabel: function (e) {
 		this.label.setLatLng(e.latlng);
 		this._map.showLabel(this.label);

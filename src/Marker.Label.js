@@ -51,5 +51,16 @@ L.Marker.include({
 		}
 
 		return this._originalSetLatLng(latlng);
+	},
+
+	getLayerSize: function () {
+		if (this.getRadius) {
+			var size = (this.getRadius() + this.options.weight) * 2;
+			return new L.Point(size, size);
+		}
+		if (this.options.icon) {
+			return this.options.icon.options.iconSize;
+		}
+		return new L.Point(0, 0);
 	}
 });

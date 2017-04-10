@@ -32,9 +32,9 @@ var LeafletLabel = L.Class.extend({
 	options: {
 		className: '',
 		clickable: false,
-		direction: 'right',
+		direction: 'auto',
 		noHide: false,
-		offset: [12, -15], // 6 (width of the label triangle) + 6 (padding)
+		offset: [0, 6], // 6 (height of the label triangle)
 		opacity: 1,
 		zoomAnimation: true
 	},
@@ -167,6 +167,7 @@ var LeafletLabel = L.Class.extend({
 			this._prevContent = this._content;
 
 			this._labelWidth = this._container.offsetWidth;
+			this._labelHeight = this._container.offsetHeight;
 		}
 	},
 
@@ -183,10 +184,37 @@ var LeafletLabel = L.Class.extend({
 			labelPoint = map.layerPointToContainerPoint(pos),
 			direction = this.options.direction,
 			labelWidth = this._labelWidth,
+			labelHeight = this._labelHeight,
+			mapSize = this._map.getSize(),
 			offset = L.point(this.options.offset);
 
+		if (direction === 'auto') {
+			var size = this._source.getLayerSize();
+			var vOffset = L.point(0, 0);
+			var hOffset = L.point(0, 0);
+
+			// label is getting out of the map by the top
+			if (labelPoint.y - labelHeight - size[1] / 2 < 0) {
+				vOffset = L.point(0, size[1] / 2 + offset.y);
+			}
+			else {
+				vOffset = L.point(0, - size[1] / 2 - labelHeight - offset.y);
+			}
+
+			if (labelPoint.x + offset.x  + (labelWidth / 2) > mapSize.x) {
+				hOffset = L.point(- labelWidth - (size[0] / 2), 0);
+			} else if (labelPoint.x - (labelWidth / 2) + offset.x < 0) {
+				hOffset = L.point((size[0] / 2), 0);
+			} else {
+				//Position label in center
+				hOffset = L.point(-labelWidth / 2, 0);
+			}
+
+			pos = pos.add(vOffset);
+			pos = pos.add(hOffset);
+		}
 		// position to the right (right or auto & needs to)
-		if (direction === 'right' || direction === 'auto' && labelPoint.x < centerPoint.x) {
+		else if (direction === 'right') {
 			L.DomUtil.addClass(container, 'leaflet-label-right');
 			L.DomUtil.removeClass(container, 'leaflet-label-left');
 
@@ -197,6 +225,7 @@ var LeafletLabel = L.Class.extend({
 
 			pos = pos.add(L.point(-offset.x - labelWidth, offset.y));
 		}
+
 
 		L.DomUtil.setPosition(container, pos);
 	},
@@ -463,6 +492,17 @@ L.Marker.include({
 		}
 
 		return this._originalSetLatLng(latlng);
+	},
+
+	getLayerSize: function () {
+		if (this.getRadius) {
+			var size = (this.getRadius() + this.options.weight) * 2;
+			return new L.Point(size, size);
+		}
+		if (this.options.icon) {
+			return this.options.icon.options.iconSize;
+		}
+		return new L.Point(0, 0);
 	}
 });
 
@@ -516,6 +556,14 @@ L.Path.include({
 		if (this.label) {
 			this.label.setContent(content);
 		}
+	},
+
+	getLayerSize: function () {
+		var bounds = this.getBounds();
+		var nwPoint = this._map.latLngToLayerPoint(bounds.getNorthWest());
+		var sePoint = this._map.latLngToLayerPoint(bounds.getSouthEast());
+
+		return new L.Point(Math.abs(sePoint.x - nwPoint.x), Math.abs(nwPoint.y - sePoint.y), false);
 	},
 
 	_showLabel: function (e) {

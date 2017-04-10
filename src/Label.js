@@ -161,23 +161,23 @@ var LeafletLabel = L.Class.extend({
 			mapSize = this._map.getSize(),
 			offset = L.point(this.options.offset);
 
-		if(direction === 'auto') {
-			let size = this._source.getLayerSize();
-			let vOffset = L.point(0, 0);
-			let hOffset = L.point(0, 0);
+		if (direction === 'auto') {
+			var size = this._source.getLayerSize();
+			var vOffset = L.point(0, 0);
+			var hOffset = L.point(0, 0);
 
 			// label is getting out of the map by the top
-			if( labelPoint.y - labelHeight - size[1] / 2 < 0) {
+			if (labelPoint.y - labelHeight - size[1] / 2 < 0) {
 				vOffset = L.point(0, size[1] / 2 + offset.y);
 			}
 			else {
 				vOffset = L.point(0, - size[1] / 2 - labelHeight - offset.y);
 			}
 
-			if( labelPoint.x + offset.x  + (labelWidth / 2) > mapSize.x) {
-				hOffset = L.point( - labelWidth - (size[0] / 2) , 0);
-			} else if ( labelPoint.x - (labelWidth / 2) + offset.x < 0 ) {
-				hOffset = L.point( (size[0] / 2) , 0);
+			if (labelPoint.x + offset.x  + (labelWidth / 2) > mapSize.x) {
+				hOffset = L.point(- labelWidth - (size[0] / 2), 0);
+			} else if (labelPoint.x - (labelWidth / 2) + offset.x < 0) {
+				hOffset = L.point((size[0] / 2), 0);
 			} else {
 				//Position label in center
 				hOffset = L.point(-labelWidth / 2, 0);
