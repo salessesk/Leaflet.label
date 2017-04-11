@@ -154,7 +154,7 @@ L.Path.include({
 		return this;
 	},
 
-	_originalBringToFront: L.Marker.prototype.bringToFront,
+	_originalBringToFront: L.Path.prototype.bringToFront,
 
 	bringToFront: function () {
 		this._originalBringToFront();
@@ -164,7 +164,7 @@ L.Path.include({
 		}
 	},
 
-	_originalBringToBack: L.Marker.prototype.bringToBack,
+	_originalBringToBack: L.Path.prototype.bringToBack,
 
 	bringToBack: function () {
 		this._originalBringToBack();
