@@ -36,7 +36,6 @@ L.Path.include({
 		if (this.label) {
 			this._hideLabel();
 			this.label = null;
-			this._showLabelAdded = false;
 			this
 				.off('mouseover add', this._showLabel, this)
 				.off('mousemove', this._moveLabel, this)
@@ -153,5 +152,25 @@ L.Path.include({
 		}
 
 		return this;
+	},
+
+	_originalBringToFront: L.Marker.prototype.bringToFront,
+
+	bringToFront: function () {
+		this._originalBringToFront();
+
+		if (this.label) {
+			this.label.updateZIndex(100000);
+		}
+	},
+
+	_originalBringToBack: L.Marker.prototype.bringToBack,
+
+	bringToBack: function () {
+		this._originalBringToBack();
+
+		if (this.label) {
+			this.label.updateZIndex(0);
+		}
 	}
 });
