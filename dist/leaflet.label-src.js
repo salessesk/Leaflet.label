@@ -558,7 +558,7 @@ L.Path.include({
 			this.label = null;
 			this._showLabelAdded = false;
 			this
-				.off('mouseover', this._showLabel, this)
+				.off('mouseover add', this._showLabel, this)
 				.off('mousemove', this._moveLabel, this)
 				.off('mouseout remove', this._hideLabel, this);
 		}
