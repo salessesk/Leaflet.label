@@ -13,4 +13,4 @@
 	} else if (typeof exports === 'object') {
 		module.exports = factory(require('leaflet'));
 	}
-}(function (L) {
+}(function (L, poly2tri) {

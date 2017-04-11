@@ -1,7 +1,7 @@
 exports.config = {
 	"browser": true,
 	"node": true,
-	"predef": ["L"],
+	"predef": ["L", "poly2tri"],
 
 	"debug": false,
 	"devel": false,
@@ -47,5 +47,6 @@ exports.config = {
 };
 
 exports.globals = {
-	'L': false
+	'L': false,
+	'poly2tri': false
 }
