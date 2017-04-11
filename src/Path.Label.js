@@ -16,9 +16,12 @@ L.Path.include({
 				}
 			}
 
-			this
-				.on('remove', this._hideLabel, this)
-				.on('add', this._showLabel, this);
+			this.on('remove', this._hideLabel, this);
+
+			if (this._labelNoHide) {
+				this.on('add', this._showLabel, this);
+			}
+
 
 			this._hasLabelHandlers = true;
 		}
