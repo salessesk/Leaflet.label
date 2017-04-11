@@ -49,11 +49,8 @@ L.Path.include({
 	},
 
 	getLayerSize: function () {
-		var bounds = this.getBounds();
-		var nwPoint = this._map.latLngToLayerPoint(bounds.getNorthWest());
-		var sePoint = this._map.latLngToLayerPoint(bounds.getSouthEast());
-
-		return new L.Point(Math.abs(sePoint.x - nwPoint.x), Math.abs(nwPoint.y - sePoint.y), false);
+		//Cannot determine precisely the size of the polygon
+		return new L.Point(0, 0, false);
 	},
 
 	getCentroid: function () {
