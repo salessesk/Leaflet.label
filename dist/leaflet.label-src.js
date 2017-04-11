@@ -11,15 +11,15 @@
 
 	// attach your plugin to the global 'L' variable
 	if (typeof window !== 'undefined' && window.L) {
-		window.LeafletLabel = factory(L);
+		window.LeafletLabel = factory(L, require('poly2tri'));
 	}
 	// define an AMD module that relies on 'leaflet'
 	else if (typeof define === 'function' && define.amd) {
-		define(['leaflet'], factory);
+		define(['leaflet', 'poly2tri'], factory);
 
 	// define a Common JS module that relies on 'leaflet'
 	} else if (typeof exports === 'object') {
-		module.exports = factory(require('leaflet'));
+		module.exports = factory(require('leaflet'), require('poly2tri'));
 	}
 }(function (L, poly2tri) {
 L.labelVersion = '0.2.4';
@@ -194,12 +194,12 @@ var LeafletLabel = L.Class.extend({
 			var className = ['center', 'top'];
 
 			// label is getting out of the map by the top
-			if (labelPoint.y - labelHeight - size[1] / 2 < 0) {
-				vOffset = L.point(0, size[1] / 2 + offset.y);
+			if (labelPoint.y - labelHeight - size.y / 2 < 0) {
+				vOffset = L.point(0, size.y / 2 + offset.y);
 				className[1] = 'bottom';
 			}
 			else {
-				vOffset = L.point(0, - size[1] / 2 - labelHeight - offset.y);
+				vOffset = L.point(0, - size.y / 2 - labelHeight - offset.y);
 			}
 
 			if (labelPoint.x + offset.x  + (labelWidth / 2) > mapSize.x) {
