@@ -3,23 +3,25 @@
 L.Path.include({
 	bindLabel: function (content, options) {
 		this._labelNoHide = options.noHide;
+		// Crazy use of fake context to prevent .off from removing parent event listeners...
+		this.context = {parent: this};
 
 		if (!this.label) {
 			if (!this._labelNoHide) {
 				this
-					.on('mouseover', this._showLabel, this)
-					.on('mousemove', this._moveLabel, this)
-					.on('mouseout', this._hideLabel, this);
+					.on('mouseover', this._showLabel, this.context)
+					.on('mousemove', this._moveLabel, this.context)
+					.on('mouseout', this._hideLabel, this.context);
 
 				if (L.Browser.touch) {
-					this.on('click', this._showLabel, this);
+					this.on('click', this._showLabel, this.context);
 				}
 			}
 
-			this.on('remove', this._hideLabel, this);
+			this.on('remove', this._hideLabel, this.context);
 
 			if (this._labelNoHide) {
-				this.on('add', this._showLabel, this);
+				this.on('add', this._showLabel, this.context);
 			}
 
 
@@ -34,12 +36,12 @@ L.Path.include({
 
 	unbindLabel: function () {
 		if (this.label) {
-			this._hideLabel();
+			this._hideLabel.apply(this.context);
 			this.label = null;
 			this
-				.off('mouseover add', this._showLabel, this)
-				.off('mousemove', this._moveLabel, this)
-				.off('mouseout remove', this._hideLabel, this);
+				.off('mouseover add', this._showLabel, this.context)
+				.off('mousemove', this._moveLabel, this.context)
+				.off('mouseout remove', this._hideLabel, this.context);
 		}
 		return this;
 	},
@@ -134,24 +136,20 @@ L.Path.include({
 	},
 
 	_showLabel: function (e) {
-		if (this.label && this._map) {
-			this.label.setLatLng(this.getCentroid());
-			this._map.showLabel(this.label);
+		if (this.parent.label && this.parent._map) {
+			this.parent.label.setLatLng(this.parent.getCentroid());
+			this.parent._map.showLabel(this.parent.label);
 		}
-
-		return this;
 	},
 
 	_moveLabel: function (e) {
-		this.label.setLatLng(e.latlng);
+		this.parent.label.setLatLng(e.latlng);
 	},
 
 	_hideLabel: function () {
-		if (this.label) {
-			this.label.close();
+		if (this.parent.label) {
+			this.parent.label.close();
 		}
-
-		return this;
 	},
 
 	_originalBringToFront: L.Path.prototype.bringToFront,
@@ -170,7 +168,7 @@ L.Path.include({
 		this._originalBringToBack();
 
 		if (this.label) {
-			this.label.updateZIndex(0);
+			this.label.updateZIndex(1);
 		}
 	}
 });
