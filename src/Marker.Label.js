@@ -59,7 +59,7 @@ L.Marker.include({
 			return new L.Point(size, size);
 		}
 		if (this.options.icon) {
-			return this.options.icon.options.iconSize;
+			return new L.point(this.options.icon.options.iconSize);
 		}
 		return new L.Point(0, 0);
 	}
