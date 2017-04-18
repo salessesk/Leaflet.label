@@ -136,8 +136,12 @@ L.Path.include({
 	},
 
 	_showLabel: function (e) {
-		if (this.parent.label && this.parent._map) {
-			this.parent.label.setLatLng(this.parent.getCentroid());
+		if (!this.parent._centroid) {
+			this.parent._centroid = this.parent.getCentroid();
+		}
+
+		if (this.parent._centroid && this.parent.label && this.parent._map) {
+			this.parent.label.setLatLng(this.parent._centroid);
 			this.parent._map.showLabel(this.parent.label);
 		}
 	},
