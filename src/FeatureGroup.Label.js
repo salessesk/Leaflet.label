@@ -16,5 +16,27 @@ L.FeatureGroup.include({
 
 	updateLabelContent: function (content) {
 		this.invoke('updateLabelContent', content);
+	},
+
+    _originalBringToFront: L.FeatureGroup.prototype.bringToFront,
+
+    bringToFront: function () {
+		var layerKeys = this._layers.keys().sort();
+
+		layerKeys.forEach(function (key) {
+            var layer = this._layers[key];
+            layer.bringToFront();
+		}.bind(this));
+    },
+
+    _originalBringToBack: L.FeatureGroup.prototype.bringToBack,
+
+	bringToBack: function () {
+        var layerKeys = this._layers.keys().sort().reverse();
+
+        layerKeys.forEach(function (key) {
+            var layer = this._layers[key];
+            layer.bringToBack();
+        }.bind(this));
 	}
 });
