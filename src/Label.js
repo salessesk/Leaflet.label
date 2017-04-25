@@ -160,6 +160,13 @@ var LeafletLabel = L.Class.extend({
 			mapSize = this._map.getSize(),
 			offset = L.point(this.options.offset);
 
+		//Remove classnames
+		var classnames = ['center', 'top', 'bottom', 'left', 'right'];
+        for (var i = 0; i < classnames.length; i++) {
+            var classname = classnames[i];
+            L.DomUtil.removeClass(container, 'leaflet-label-position--' + classname);
+        }
+
 		if (direction === 'auto') {
 			var size = this._source.getLayerSize();
 			var vOffset = L.point(0, 0);
@@ -191,17 +198,18 @@ var LeafletLabel = L.Class.extend({
 
 			pos = pos.add(vOffset);
 			pos = pos.add(hOffset);
-			L.DomUtil.addClass(container, 'leaflet-label-' + className.join('-'));
+            for (var j = 0; j < className.length; j++) {
+                var classN = className[j];
+                L.DomUtil.addClass(container, 'leaflet-label-position--' + classN);
+            }
 		}
 		// position to the right (right or auto & needs to)
 		else if (direction === 'right') {
-			L.DomUtil.addClass(container, 'leaflet-label-right');
-			L.DomUtil.removeClass(container, 'leaflet-label-left');
+			L.DomUtil.addClass(container, 'leaflet-label-position--right');
 
 			pos = pos.add(offset);
 		} else { // position to the left
-			L.DomUtil.addClass(container, 'leaflet-label-left');
-			L.DomUtil.removeClass(container, 'leaflet-label-right');
+			L.DomUtil.addClass(container, 'leaflet-label-position--left');
 
 			pos = pos.add(L.point(-offset.x - labelWidth, offset.y));
 		}
