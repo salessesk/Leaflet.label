@@ -193,9 +193,10 @@ var LeafletLabel = L.Class.extend({
 			var hOffset = L.point(0, 0);
 			var className = ['center', 'top'];
 
+			//computing vertical offset
 			// label is getting out of the map by the top
 			if (labelPoint.y - labelHeight - size.y / 2 < 0) {
-				offset.multiplyBy(-1);
+				offset = offset.multiplyBy(-1);
 				vOffset = L.point(0, size.y / 2 + offset.y);
 				className[1] = 'bottom';
 			}
@@ -203,6 +204,7 @@ var LeafletLabel = L.Class.extend({
 				vOffset = L.point(0, - size.y / 2 - labelHeight - offset.y);
 			}
 
+            //computing horizontal offset
 			if (labelPoint.x + offset.x  + (labelWidth / 2) > mapSize.x) {
 				className[0] = 'left';
 				hOffset = L.point(- labelWidth, 0);
