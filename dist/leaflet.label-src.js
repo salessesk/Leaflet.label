@@ -195,6 +195,7 @@ var LeafletLabel = L.Class.extend({
 
 			// label is getting out of the map by the top
 			if (labelPoint.y - labelHeight - size.y / 2 < 0) {
+				offset.multiplyBy(-1);
 				vOffset = L.point(0, size.y / 2 + offset.y);
 				className[1] = 'bottom';
 			}
