@@ -607,8 +607,8 @@ L.Path.include({
             center = polylabel(geoJson.geometry.coordinates);
 		}
 
-
-		return new L.LatLng(center[0], center[1]);
+		//thanks geojson reversed coordinates...
+		return new L.LatLng(center[1], center[0]);
 	},
 
 	_showLabel: function (e) {
