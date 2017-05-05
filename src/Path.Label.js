@@ -1,4 +1,5 @@
 /*global LeafletLabel */
+var polylabel = polylabel || function () {};
 
 L.Path.include({
 	bindLabel: function (content, options) {
@@ -66,73 +67,13 @@ L.Path.include({
 		}
 	},
 
-	_centerOfTriangle: function (triangle) {
-		var points = triangle.points_;
-
-		return {
-			x: (points[0].x + points[1].x + points[2].x) / 3,
-			y: (points[0].y + points[1].y + points[2].y) / 3
-		};
-	},
-
-	_areaOfTriangle: function (triangle) {
-		var points = triangle.points_,
-			point1 = points[0],
-			point2 = points[1],
-			point3 = points[2],
-			x1 = point1.x,
-			x2 = point2.x,
-			x3 = point3.x,
-			y1 = point1.y,
-			y2 = point2.y,
-			y3 = point3.y;
-
-		return ((x1 * (y2 - y3)) + (x2 * (y3 - y1)) + (x3 * (y1 - y2))) / 2;
-	},
-	_largestTriangle: function (triangles) {
-		var largest = null,
-			triangle,
-			i = 0;
-
-
-		for (; i < triangles.length; i++) {
-			triangle = triangles[i];
-			triangle.area = this._areaOfTriangle(triangle);
-			if (largest === null) {
-				largest = triangle;
-				continue;
-			}
-
-			if (triangle.area > largest.area) {
-				largest = triangle;
-			}
-		}
-
-		return largest;
-	},
 	_getCentroidIsh: function () {
 		var layer = this,
-			latlngs = layer._latlngs,
-			length = latlngs.length,
-			contour = [],
-			latlng,
-			i = 0,
-			swctx,
 			center;
 
-		for (; i < length; i++) {
-			latlng = latlngs[i];
-			contour.push(new poly2tri.Point(latlng.lat, latlng.lng));
-		}
+		center = polylabel(layer.toGeoJSON());
 
-		swctx = new poly2tri.SweepContext(contour);
-		swctx.triangulate();
-
-		var triangles = swctx.getTriangles();
-		var triangle = this._largestTriangle(triangles);
-		center = this._centerOfTriangle(triangle);
-
-		return new L.LatLng(center.x, center.y);
+		return new L.LatLng(center[0], center[1]);
 	},
 
 	_showLabel: function (e) {
