@@ -612,13 +612,18 @@ L.Path.include({
 	},
 
 	_showLabel: function (e) {
-		if (!this.parent._centroid) {
-			this.parent._centroid = this.parent.getCentroid();
+		if (!this._labelNoHide) {
+            this.parent._map.showLabel(this.parent.label);
 		}
+		else {
+            if (!this.parent._centroid) {
+                this.parent._centroid = this.parent.getCentroid();
+            }
 
-		if (this.parent._centroid && this.parent.label && this.parent._map) {
-			this.parent.label.setLatLng(this.parent._centroid);
-			this.parent._map.showLabel(this.parent.label);
+            if (this.parent._centroid && this.parent.label && this.parent._map) {
+                this.parent.label.setLatLng(this.parent._centroid);
+                this.parent._map.showLabel(this.parent.label);
+            }
 		}
 	},
 
