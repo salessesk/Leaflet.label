@@ -71,7 +71,11 @@ L.Path.include({
 		var layer = this,
 			center;
 
-		center = polylabel(layer.toGeoJSON().geometry.coordinates);
+		var geoJson = layer.toGeoJSON();
+		if (geoJson.geometry) {
+            center = polylabel(geoJson.geometry.coordinates);
+		}
+
 
 		return new L.LatLng(center[0], center[1]);
 	},
