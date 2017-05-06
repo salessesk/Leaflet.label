@@ -82,6 +82,7 @@ L.Path.include({
 
 	_showLabel: function (e) {
 		if (!this._labelNoHide) {
+			this.parent.label.setLatLng(e.latlng);
             this.parent._map.showLabel(this.parent.label);
 		}
 		else {
