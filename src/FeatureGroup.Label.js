@@ -21,22 +21,26 @@ L.FeatureGroup.include({
     _originalBringToFront: L.FeatureGroup.prototype.bringToFront,
 
     bringToFront: function () {
-		var layerKeys = Object.keys(this._layers).sort();
+        var layerKeys = Object.keys(this._layers).sort();
 
-		layerKeys.forEach(function (key) {
+        layerKeys.forEach(function (key) {
             var layer = this._layers[key];
-            layer.bringToFront();
-		}.bind(this));
+            if (layer.bringToFront) {
+                layer.bringToFront();
+            }
+        }.bind(this));
     },
 
     _originalBringToBack: L.FeatureGroup.prototype.bringToBack,
 
-	bringToBack: function () {
+    bringToBack: function () {
         var layerKeys = Object.keys(this._layers).sort().reverse();
 
         layerKeys.forEach(function (key) {
             var layer = this._layers[key];
-            layer.bringToBack();
+            if (layer.bringToBack) {
+                layer.bringToBack();
+            }
         }.bind(this));
-	}
+    }
 });
